@@ -32,6 +32,7 @@ namespace Blockchain.Models
 
         public event Action<string> OnLogEvent;
         public event Action OnStateChanged;
+        public event Action<int, int, bool> OnMessageSent; // fromId, toId, isPositive
 
         public SimulatorEngine()
         {
@@ -232,6 +233,9 @@ namespace Blockchain.Models
             CurrentMetrics.MessagesExchanged = Nodes.Count;
 
             ActiveAction = $"Bloque Encontrado - {winner.Name}";
+            // Broadcast block to all nodes
+            foreach (var n in Nodes.Where(n => n != winner))
+                OnMessageSent?.Invoke(winner.Id, n.Id, true);
             ParticipatingNodes.Clear();
             OnStateChanged?.Invoke();
 
@@ -319,11 +323,13 @@ namespace Blockchain.Models
                 {
                     noVotes++;
                     node.VisualState = NodeVisualState.Attacking;
+                    OnMessageSent?.Invoke(node.Id, selected.Id, false);
                     OnLogEvent?.Invoke($"- {node.Name} (M) vota en contra del bloque.");
                 }
                 else
                 {
                     yesVotes++;
+                    OnMessageSent?.Invoke(node.Id, selected.Id, true);
                     OnLogEvent?.Invoke($"- {node.Name} atestigua a favor del bloque.");
                 }
                 await SimDelay(300);
@@ -412,6 +418,7 @@ namespace Blockchain.Models
                 {
                     noVotes++;
                     node.VisualState = NodeVisualState.Attacking;
+                    OnMessageSent?.Invoke(node.Id, leader.Id, false);
                     OnLogEvent?.Invoke($"- {node.Name} (M) vota en contra/miente.");
                 }
                 else
@@ -420,11 +427,13 @@ namespace Blockchain.Models
                     if (blockValid)
                     {
                         yesVotes++;
+                        OnMessageSent?.Invoke(node.Id, leader.Id, true);
                         OnLogEvent?.Invoke($"- {node.Name} verifica hash y vota a favor.");
                     }
                     else
                     {
                         noVotes++;
+                        OnMessageSent?.Invoke(node.Id, leader.Id, false);
                         OnLogEvent?.Invoke($"- {node.Name} detecta hash alterado y vota en contra.");
                     }
                 }

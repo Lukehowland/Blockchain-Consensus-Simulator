@@ -95,4 +95,16 @@ namespace Blockchain.Models
         public bool Success { get; set; }
         public string EnergyEstimate { get; set; }
     }
+
+    // Partícula para animación de mensajes entre nodos
+    public class Particle
+    {
+        public int FromNodeId { get; set; }
+        public int ToNodeId { get; set; }
+        public float Progress { get; set; }
+        public float Speed { get; set; } = 0.035f;
+        public Color ParticleColor { get; set; } = Color.Orange;
+        public string Symbol { get; set; } = "●";
+        public bool IsComplete => Progress >= 1.0f;
+    }
 }

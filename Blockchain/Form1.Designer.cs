@@ -53,6 +53,7 @@ namespace Blockchain
             tabMetrics = new TabPage();
             tabYisus = new TabPage();
             picYisus = new PictureBox();
+            animationTimer = new System.Windows.Forms.Timer();
             splitData = new SplitContainer();
 
             ((System.ComponentModel.ISupportInitialize)numNodes).BeginInit();
@@ -392,6 +393,12 @@ namespace Blockchain
             Text = "Simulador Consenso Blockchain";
             WindowState = FormWindowState.Maximized;
             Load += Form1_Load;
+            //
+            // animationTimer
+            //
+            animationTimer.Interval = 33;
+            animationTimer.Tick += animationTimer_Tick;
+            animationTimer.Start();
 
             ((System.ComponentModel.ISupportInitialize)numNodes).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMalicious).EndInit();
@@ -461,5 +468,6 @@ namespace Blockchain
         private System.Windows.Forms.TabPage tabYisus;
         private System.Windows.Forms.PictureBox picYisus;
         private System.Windows.Forms.SplitContainer splitData;
+        private System.Windows.Forms.Timer animationTimer;
     }
 }
