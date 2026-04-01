@@ -116,6 +116,7 @@ namespace Blockchain
                 dgvChain.FirstDisplayedScrollingRowIndex = dgvChain.Rows.Count - 1;
 
             picNetwork.Invalidate(); // Triggers redraw
+            if (picBlockchain != null) picBlockchain.Invalidate();
         }
 
         private void btnSetup_Click(object sender, EventArgs e)
@@ -216,6 +217,47 @@ namespace Blockchain
 
                 // Draw external label (Stake/Power)
                 g.DrawString($"S={node.Stake}\nP={node.ComputationalPower}", new Font("Arial", 8), Brushes.DarkGray, pos.X - nodeRadius, pos.Y + nodeRadius + 2);
+            }
+        }
+
+        private void picBlockchain_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            if (engine == null || engine.Chain == null) return;
+
+            int blockWidth = 100;
+            int blockHeight = 60;
+            int spacing = 30;
+            int startX = 20;
+            int startY = (picBlockchain.Height - blockHeight) / 2;
+
+            for (int i = 0; i < engine.Chain.Count; i++)
+            {
+                var block = engine.Chain[i];
+                int x = startX + i * (blockWidth + spacing);
+
+                // Draw arrow from previous block
+                if (i > 0)
+                {
+                    int prevX = x - spacing;
+                    int arrowY = startY + blockHeight / 2;
+                    Pen arrowPen = new Pen(Color.Gray, 3);
+                    // Add simple arrow head
+                    g.DrawLine(arrowPen, prevX, arrowY, x, arrowY);
+                    g.DrawLine(arrowPen, x - 10, arrowY - 5, x, arrowY);
+                    g.DrawLine(arrowPen, x - 10, arrowY + 5, x, arrowY);
+                }
+
+                // Draw Block visual representation
+                Rectangle rect = new Rectangle(x, startY, blockWidth, blockHeight);
+                g.FillRectangle(Brushes.White, rect);
+                g.DrawRectangle(Pens.Black, rect);
+
+                // Draw Text inside the block
+                string hashSnippet = string.IsNullOrEmpty(block.Hash) ? "" : block.Hash.Substring(0, Math.Min(6, block.Hash.Length)) + "...";
+                string txt = $"Blk #{block.Index}\nTx: {block.Transactions?.Count ?? 0}\n{hashSnippet}";
+                g.DrawString(txt, new Font("Arial", 8), Brushes.Black, rect, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
         }
     }
