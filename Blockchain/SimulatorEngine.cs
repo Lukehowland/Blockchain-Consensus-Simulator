@@ -17,6 +17,9 @@ namespace Blockchain.Models
 
         // Settings
         public int PoWDifficulty { get; set; } = 3;
+        public double SpeedMultiplier { get; set; } = 1.0; // 1.0=normal, 2.0=lenta, 0.5=rápida
+
+        private Task SimDelay(int baseMs) => Task.Delay((int)(baseMs * SpeedMultiplier));
 
         // Visual State
         public Node CurrentProposer { get; private set; }
@@ -158,7 +161,7 @@ namespace Blockchain.Models
             ParticipatingNodes.Clear();
             ResetVisualStates();
             OnStateChanged?.Invoke();
-            await Task.Delay(1000);
+            await SimDelay(1000);
             ActiveAction = "";
             OnStateChanged?.Invoke();
         }
@@ -191,7 +194,7 @@ namespace Blockchain.Models
             OnStateChanged?.Invoke();
 
             OnLogEvent?.Invoke($"{winner.Name} está intentando resolver el puzzle (dificultad {PoWDifficulty}).");
-            await Task.Delay(500);
+            await SimDelay(500);
 
             if (winner.IsMalicious && rnd.Next(100) < 50)
             {
@@ -207,7 +210,7 @@ namespace Blockchain.Models
                 CurrentMetrics.MessagesExchanged = 1;
 
                 OnLogEvent?.Invoke("La red verifica el bloque...");
-                await Task.Delay(1000);
+                await SimDelay(1000);
                 OnLogEvent?.Invoke("La red RECHAZA el bloque inválido.");
                 return false;
             }
@@ -233,7 +236,7 @@ namespace Blockchain.Models
             OnStateChanged?.Invoke();
 
             OnLogEvent?.Invoke($"{winner.Name} encontró el hash: {block.Hash.Substring(0, 15)}... tras {block.Nonce} intentos.");
-            await Task.Delay(1000);
+            await SimDelay(1000);
             return true;
         }
 
@@ -243,7 +246,7 @@ namespace Blockchain.Models
             OnStateChanged?.Invoke();
 
             OnLogEvent?.Invoke("Seleccionando validador proporcional al Stake...");
-            await Task.Delay(1000);
+            await SimDelay(1000);
 
             double totalStake = Nodes.Sum(n => n.Stake);
             Random rnd = new();
@@ -262,7 +265,7 @@ namespace Blockchain.Models
             OnStateChanged?.Invoke();
 
             OnLogEvent?.Invoke($"Validador seleccionado: {selected.Name} (Stake: {selected.Stake})");
-            await Task.Delay(1000);
+            await SimDelay(1000);
 
             int messages = 1;
 
@@ -276,7 +279,7 @@ namespace Blockchain.Models
                 OnLogEvent?.Invoke($"¡{selected.Name} es malicioso e intentó robar fondos!");
                 block.Hash = "invalid_pos_hash";
                 OnLogEvent?.Invoke("Los atestiguadores (attestors) revisan el bloque...");
-                await Task.Delay(1500);
+                await SimDelay(1500);
 
                 selected.VisualState = NodeVisualState.Slashed;
                 ActiveAction = $"Slashing a {selected.Name}!";
@@ -285,7 +288,7 @@ namespace Blockchain.Models
                 OnLogEvent?.Invoke($"El bloque fue RECHAZADO por la red. ¡Parte del Stake de {selected.Name} ha sido destruido (Slashing)!");
                 selected.Stake *= 0.5;
                 CurrentMetrics.MessagesExchanged = Nodes.Count;
-                await Task.Delay(1000);
+                await SimDelay(1000);
                 return false;
             }
 
@@ -295,7 +298,7 @@ namespace Blockchain.Models
             ActiveAction = $"Bloque Propuesto - {selected.Name}";
             ParticipatingNodes = Nodes.Where(n => n != selected).ToList();
             OnStateChanged?.Invoke();
-            await Task.Delay(500);
+            await SimDelay(500);
 
             // 2.4 — Fase de atestiguación
             OnLogEvent?.Invoke("Fase de atestiguación: los demás nodos verifican el bloque...");
@@ -323,7 +326,7 @@ namespace Blockchain.Models
                     yesVotes++;
                     OnLogEvent?.Invoke($"- {node.Name} atestigua a favor del bloque.");
                 }
-                await Task.Delay(300);
+                await SimDelay(300);
             }
 
             CurrentMetrics.MessagesExchanged = messages;
@@ -362,7 +365,7 @@ namespace Blockchain.Models
             OnStateChanged?.Invoke();
 
             OnLogEvent?.Invoke($"Líder asignado: {leader.Name}");
-            await Task.Delay(1000);
+            await SimDelay(1000);
 
             int messages = 1;
             block.Validator = "Comité PBFT";
@@ -388,7 +391,7 @@ namespace Blockchain.Models
             OnStateChanged?.Invoke();
 
             OnLogEvent?.Invoke($"Votos requeridos (2/3): {requiredVotes}");
-            await Task.Delay(1000);
+            await SimDelay(1000);
 
             int yesVotes = 0;
             int noVotes = 0;
@@ -425,7 +428,7 @@ namespace Blockchain.Models
                         OnLogEvent?.Invoke($"- {node.Name} detecta hash alterado y vota en contra.");
                     }
                 }
-                await Task.Delay(500);
+                await SimDelay(500);
             }
 
             yesVotes += leader.IsMalicious ? 0 : 1;
@@ -437,7 +440,7 @@ namespace Blockchain.Models
             ParticipatingNodes.Clear();
             ActiveAction = $"Cálculo de Votos PBFT. ({yesVotes} vs {noVotes})";
             OnStateChanged?.Invoke();
-            await Task.Delay(1000);
+            await SimDelay(1000);
 
             OnLogEvent?.Invoke($"Resultados Commit: {yesVotes} Favor, {noVotes} Contra.");
             if (yesVotes >= requiredVotes)

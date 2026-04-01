@@ -26,6 +26,11 @@ namespace Blockchain
             cmbConsensus.SelectedIndex = 0;
             numNodes.Value = 5;
             numMalicious.Value = 1;
+
+            // Velocidad de simulación
+            cmbSpeed.Items.AddRange(new object[] { "Muy Lenta (x3)", "Lenta (x2)", "Normal (x1)", "Rápida (x0.5)", "Muy Rápida (x0.25)" });
+            cmbSpeed.SelectedIndex = 2; // Normal por defecto
+
             ConfigurarGrillas();
         }
 
@@ -162,7 +167,16 @@ namespace Blockchain
         private async void btnStart_Click(object sender, EventArgs e)
         {
             engine.Consensus = (ConsensusType)cmbConsensus.SelectedItem;
-            engine.PoWDifficulty = (int)numDifficulty.Value; // 4.3
+            engine.PoWDifficulty = (int)numDifficulty.Value;
+            engine.SpeedMultiplier = cmbSpeed.SelectedIndex switch
+            {
+                0 => 3.0,   // Muy Lenta
+                1 => 2.0,   // Lenta
+                2 => 1.0,   // Normal
+                3 => 0.5,   // Rápida
+                4 => 0.25,  // Muy Rápida
+                _ => 1.0
+            };
             btnStart.Enabled = false;
             btnAddTx.Enabled = false;
             btnSetup.Enabled = false;

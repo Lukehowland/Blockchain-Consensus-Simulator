@@ -36,6 +36,8 @@ namespace Blockchain
             numDifficulty = new NumericUpDown();
             label5 = new Label();
             label6 = new Label();
+            labelSpeed = new Label();
+            cmbSpeed = new ComboBox();
             dgvNodes = new DataGridView();
             dgvChain = new DataGridView();
             dgvMetrics = new DataGridView();
@@ -138,9 +140,23 @@ namespace Blockchain
             numDifficulty.Maximum = 6;
             numDifficulty.Value = 3;
             //
+            // labelSpeed
+            //
+            labelSpeed.AutoSize = true;
+            labelSpeed.Location = new Point(10, 205);
+            labelSpeed.Name = "labelSpeed";
+            labelSpeed.Text = "Velocidad Simulación:";
+            //
+            // cmbSpeed
+            //
+            cmbSpeed.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbSpeed.Location = new Point(10, 225);
+            cmbSpeed.Name = "cmbSpeed";
+            cmbSpeed.Size = new Size(220, 23);
+            //
             // btnSetup
             //
-            btnSetup.Location = new Point(10, 210);
+            btnSetup.Location = new Point(10, 260);
             btnSetup.Name = "btnSetup";
             btnSetup.Size = new Size(220, 30);
             btnSetup.Text = "Configurar Nodos";
@@ -148,7 +164,7 @@ namespace Blockchain
             //
             // btnAddTx
             //
-            btnAddTx.Location = new Point(10, 250);
+            btnAddTx.Location = new Point(10, 300);
             btnAddTx.Name = "btnAddTx";
             btnAddTx.Size = new Size(220, 30);
             btnAddTx.Text = "Agregar Transacción";
@@ -156,7 +172,7 @@ namespace Blockchain
             //
             // btnStart
             //
-            btnStart.Location = new Point(10, 290);
+            btnStart.Location = new Point(10, 340);
             btnStart.Name = "btnStart";
             btnStart.Size = new Size(220, 30);
             btnStart.Text = "Iniciar Consenso";
@@ -164,7 +180,7 @@ namespace Blockchain
             //
             // btnReset (4.4)
             //
-            btnReset.Location = new Point(10, 330);
+            btnReset.Location = new Point(10, 380);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(220, 30);
             btnReset.Text = "Reiniciar";
@@ -172,7 +188,7 @@ namespace Blockchain
             //
             // btnCompare (4.5)
             //
-            btnCompare.Location = new Point(10, 370);
+            btnCompare.Location = new Point(10, 420);
             btnCompare.Name = "btnCompare";
             btnCompare.Size = new Size(220, 30);
             btnCompare.Text = "Comparar Algoritmos";
@@ -181,7 +197,7 @@ namespace Blockchain
             // label5
             //
             label5.AutoSize = true;
-            label5.Location = new Point(10, 410);
+            label5.Location = new Point(10, 460);
             label5.Name = "label5";
             label5.Size = new Size(145, 15);
             label5.Text = "Transacciones Pendientes:";
@@ -189,7 +205,7 @@ namespace Blockchain
             // lstPendingTx (3.6 — tamaño corregido)
             //
             lstPendingTx.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lstPendingTx.Location = new Point(10, 430);
+            lstPendingTx.Location = new Point(10, 480);
             lstPendingTx.Name = "lstPendingTx";
             lstPendingTx.Size = new Size(218, 240);
             //
@@ -318,6 +334,8 @@ namespace Blockchain
             panelLeft.Controls.Add(label3);
             panelLeft.Controls.Add(numMalicious);
             panelLeft.Controls.Add(labelDifficulty);
+            panelLeft.Controls.Add(labelSpeed);
+            panelLeft.Controls.Add(cmbSpeed);
             panelLeft.Controls.Add(numDifficulty);
             panelLeft.Controls.Add(btnSetup);
             panelLeft.Controls.Add(btnAddTx);
@@ -401,6 +419,8 @@ namespace Blockchain
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label labelDifficulty;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelSpeed;
+        private System.Windows.Forms.ComboBox cmbSpeed;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DataGridView dgvNodes;
         private System.Windows.Forms.DataGridView dgvChain;
