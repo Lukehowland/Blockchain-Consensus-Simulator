@@ -31,6 +31,17 @@ namespace Blockchain
             cmbSpeed.Items.AddRange(new object[] { "Muy Lenta (x3)", "Lenta (x2)", "Normal (x1)", "Rápida (x0.5)", "Muy Rápida (x0.25)" });
             cmbSpeed.SelectedIndex = 2; // Normal por defecto
 
+            // Cargar imagen de Satoshi Nakamoto en tab "yisus"
+            try
+            {
+                string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "satoshi.png");
+                if (!File.Exists(imgPath))
+                    imgPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath)!, "..", "..", "..", "satoshi.png");
+                if (File.Exists(imgPath))
+                    picYisus.Image = Image.FromFile(imgPath);
+            }
+            catch { }
+
             ConfigurarGrillas();
         }
 

@@ -51,6 +51,8 @@ namespace Blockchain
             tabLogs = new TabPage();
             tabData = new TabPage();
             tabMetrics = new TabPage();
+            tabYisus = new TabPage();
+            picYisus = new PictureBox();
             splitData = new SplitContainer();
 
             ((System.ComponentModel.ISupportInitialize)numNodes).BeginInit();
@@ -70,6 +72,8 @@ namespace Blockchain
             tabLogs.SuspendLayout();
             tabData.SuspendLayout();
             tabMetrics.SuspendLayout();
+            tabYisus.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picYisus).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitData).BeginInit();
             splitData.Panel1.SuspendLayout();
             splitData.Panel2.SuspendLayout();
@@ -275,6 +279,23 @@ namespace Blockchain
             tabControlRight.TabPages.Add(tabData);
             tabControlRight.TabPages.Add(tabMetrics);
             //
+            // tabYisus
+            //
+            tabYisus.Text = "yisus";
+            tabYisus.Padding = new Padding(3);
+            tabYisus.BackColor = Color.FromArgb(30, 30, 30);
+            tabYisus.Controls.Add(picYisus);
+            //
+            // picYisus
+            //
+            picYisus.Dock = DockStyle.Fill;
+            picYisus.SizeMode = PictureBoxSizeMode.Zoom;
+            picYisus.BackColor = Color.FromArgb(30, 30, 30);
+            picYisus.Name = "picYisus";
+            picYisus.TabStop = false;
+            //
+            tabControlRight.TabPages.Add(tabYisus);
+            //
             // picNetwork
             //
             picNetwork.BackColor = Color.White;
@@ -392,6 +413,8 @@ namespace Blockchain
             tabLogs.ResumeLayout(false);
             tabData.ResumeLayout(false);
             tabMetrics.ResumeLayout(false);
+            tabYisus.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picYisus).EndInit();
             splitData.Panel1.ResumeLayout(false);
             splitData.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitData).EndInit();
@@ -435,6 +458,8 @@ namespace Blockchain
         private System.Windows.Forms.TabPage tabLogs;
         private System.Windows.Forms.TabPage tabData;
         private System.Windows.Forms.TabPage tabMetrics;
+        private System.Windows.Forms.TabPage tabYisus;
+        private System.Windows.Forms.PictureBox picYisus;
         private System.Windows.Forms.SplitContainer splitData;
     }
 }
